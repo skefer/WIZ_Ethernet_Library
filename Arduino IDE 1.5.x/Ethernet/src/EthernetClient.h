@@ -24,16 +24,22 @@ public:
   virtual void stop();
   virtual uint8_t connected();
   virtual operator bool();
+  uint8_t getSock();
   virtual bool operator==(const EthernetClient&);
   virtual bool operator!=(const EthernetClient& rhs) { return !this->operator==(rhs); };
 
   friend class EthernetServer;
   
   using Print::write;
+  void getRemoteIP(uint8_t remoteIP[]); // ACH
+  uint16_t getRemotePort(); // ACH
 
 private:
   static uint16_t _srcport;
   uint8_t _sock;
+  // ACH - added
+  uint16_t _dstport; // ACH
+  // ACH - added
 };
 
 #endif

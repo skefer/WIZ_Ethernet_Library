@@ -21,7 +21,9 @@ private:
 public:
   static uint8_t _state[MAX_SOCK_NUM];
   static uint16_t _server_port[MAX_SOCK_NUM];
-
+  // ACH - added
+  static uint16_t _client_port[MAX_SOCK_NUM]; // ACH
+  
 #if defined(WIZ550io_WITH_MACADDRESS)
   // Initialize function when use the ioShield serise (included WIZ550io)
   // WIZ550io has a MAC address which is written after reset.

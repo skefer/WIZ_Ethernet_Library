@@ -337,28 +337,10 @@ private:
 
 private:
 #if defined(ARDUINO_ARCH_AVR)
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__)
-  inline static void initSS()    { DDRB  |=  _BV(4); };
-  inline static void setSS()     { PORTB &= ~_BV(4); };
-  inline static void resetSS()   { PORTB |=  _BV(4); };
-#elif defined(__AVR_ATmega32U4__)
-  inline static void initSS()    { DDRB  |=  _BV(6); };
-  inline static void setSS()     { PORTB &= ~_BV(6); };
-  inline static void resetSS()   { PORTB |=  _BV(6); }; 
-#elif defined(__AVR_AT90USB1286__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB162__)
-  inline static void initSS()    { DDRB  |=  _BV(0); };
-  inline static void setSS()     { PORTB &= ~_BV(0); };
-  inline static void resetSS()   { PORTB |=  _BV(0); }; 
-#elif defined(REL_GR_KURUMI) || defined(REL_GR_KURUMI_PROTOTYPE)
-  inline static void initSS()    { pinMode(SS, OUTPUT); \
-                                   digitalWrite(SS, HIGH); };
-  inline static void setSS()     { digitalWrite(SS, LOW); };
-  inline static void resetSS()   { digitalWrite(SS, HIGH); };
-#else
-  inline static void initSS()    { DDRB  |=  _BV(2); };
-  inline static void setSS()     { PORTB &= ~_BV(2); };
-  inline static void resetSS()   { PORTB |=  _BV(2); };
-#endif
+  inline static void initSS()    { pinMode(53, OUTPUT); \
+                                   digitalWrite(53, HIGH); };
+  inline static void setSS()     { digitalWrite(53, LOW); };
+  inline static void resetSS()   { digitalWrite(53, HIGH); };
 #endif // ARDUINO_ARCH_AVR
 };
 

@@ -8,6 +8,10 @@ extern "C" {
 #include "EthernetClient.h"
 #include "EthernetServer.h"
 
+EthernetServer::EthernetServer()
+{
+}
+
 EthernetServer::EthernetServer(uint16_t port)
 {
   _port = port;
@@ -24,6 +28,12 @@ void EthernetServer::begin()
       break;
     }
   }  
+}
+
+void EthernetServer::beginWithPort(uint16_t port) 
+{
+  _port = port;
+  begin();
 }
 
 void EthernetServer::accept()
@@ -57,10 +67,21 @@ EthernetClient EthernetServer::available()
     if (EthernetClass::_server_port[sock] == _port &&
         (client.status() == SnSR::ESTABLISHED ||
          client.status() == SnSR::CLOSE_WAIT)) {
-      if (client.available()) {
-        // XXX: don't always pick the lowest numbered socket.
-        return client;
-      }
+			// ACH - added
+			// See if we have identified this one before
+			if (EthernetClass::_client_port[sock] == 0 ) {
+				client._dstport = client.getRemotePort();
+				EthernetClass::_client_port[sock] = client._dstport;
+			}
+			if (EthernetClass::_client_port[sock] != client._dstport) {
+				// Not us!
+				continue;
+			}
+			// ACH - end of additions
+			//if (client.available()) { // ACH - comment
+			// XXX: don't always pick the lowest numbered socket.
+			return client;
+			//} // ACH - comment
     }
   }
 
@@ -80,11 +101,13 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
 
   for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
     EthernetClient client(sock);
-
-    if (EthernetClass::_server_port[sock] == _port &&
-      client.status() == SnSR::ESTABLISHED) {
-      n += client.write(buffer, size);
-    }
+	
+	if (EthernetClass::_server_port[sock] == _port &&
+			// ACH - added
+			EthernetClass::_client_port[sock] == client._srcport && // ACH
+			client.status() == SnSR::ESTABLISHED) {
+		n += client.write(buffer, size);
+	}
   }
   
   return n;
